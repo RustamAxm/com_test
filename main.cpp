@@ -2,11 +2,12 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string>
+#include <fstream>
 
 class Serial {
 public:
-    explicit Serial() {
-        port = open("/dev/ttyUSB0", O_RDWR);
+    explicit Serial(const std::string &com) {
+        port = open(const_cast<char *>(com.c_str()), O_RDWR);
         if (port <= 0) {
             std::cout << "Port opening failed" << std::endl;
         } else {
@@ -16,7 +17,7 @@ public:
 
     ~Serial() {
         if (Close()) {
-            std::cout << "Closed com port" << std::endl;
+            std::cout << "Com port closed" << std::endl;
         } else {
             std::cerr << "Closing error" << std::endl;
         }
@@ -54,8 +55,9 @@ private:
 
 int main() {
 
-    std::string message=  "Hello world";
-    Serial ser;
+    std::string message = "Hello world";
+    std::string com = "/dev/ttyUSB0";
+    Serial ser("/dev/ttyUSB0");
     ser << message;
     std::string returned;
     ser >> returned;
