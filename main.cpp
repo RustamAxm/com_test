@@ -2,11 +2,11 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string>
-#include <fstream>
+
 
 class Serial {
 public:
-    explicit Serial(const std::string &com) {
+    [[maybe_unused]] explicit Serial(const std::string &com) {
         port = open(const_cast<char *>(com.c_str()), O_RDWR);
         if (port <= 0) {
             std::cout << "Port opening failed" << std::endl;
