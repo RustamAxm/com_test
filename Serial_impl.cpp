@@ -7,11 +7,12 @@
 namespace Serial {
 
     Serial::Serial(const std::string &com) {
+
         port = open(const_cast<const char *>(com.c_str()), O_RDWR);
         if (port <= 0) {
-            std::cout << "Port opening failed" << std::endl;
+            throw std::logic_error("Port opening failed");
         } else {
-            std::cout << "Port "<< port << " opened" << std::endl;
+            std::cout << "Port " << port << " opened" << std::endl;
         }
     }
 
@@ -43,8 +44,22 @@ namespace Serial {
     }
 
     bool Serial::Write(std::string & data) {
+        data.push_back('\r');
         data.push_back('\n');
         return write(port, const_cast<const char *>(data.c_str()), data.size());
+    }
+
+    std::vector<uint16_t> Serial::ReadBin(size_t n_int) const {
+        std::vector<uint16_t> buffer;
+        buffer.reserve(n_int);
+        uint16_t tmp[n_int];
+        int ret = read(port, tmp, sizeof(buffer));
+        if (ret) {
+            for (auto a : tmp) {
+                buffer.push_back(a);
+            }
+        }
+        return buffer;
     }
 
     bool Serial::Close() const {
@@ -56,10 +71,10 @@ namespace Serial {
         int ret = read(port, buffer,sizeof(buffer));
         if (ret) {
             for (auto ch : buffer) {
+                data.push_back(ch);
                 if (ch == '\n') {
                     break;
                 }
-                data.push_back(ch);
             }
             return true;
         } else {

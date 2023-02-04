@@ -3,14 +3,17 @@
 #include <iostream>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/select.h>
 #include <string>
+#include <stdexcept>
+#include <vector>
 
 namespace Serial {
 
     class Serial {
     public:
         Serial(const Serial & other) = delete;
-        Serial operator =(const Serial &other) = delete;
+        Serial operator =(const Serial & other) = delete;
         Serial(Serial && other) = delete;
         Serial operator =(Serial && other) = delete;
 
@@ -25,6 +28,8 @@ namespace Serial {
         std::string Read();
 
         bool Read(std::string & data) const;
+
+        std::vector<uint16_t> ReadBin(size_t n_int) const;
 
         bool Write(std::string & data);
 
