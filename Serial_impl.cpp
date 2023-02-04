@@ -9,6 +9,46 @@ namespace Serial {
     Serial::Serial(const std::string &com) {
 
         port = open(const_cast<const char *>(com.c_str()), O_RDWR);
+
+        struct termios oldsettings, newsettings;
+        if (tcgetattr(port, &oldsettings) != 0) {
+            throw std::logic_error("from tcgetattr");
+        }
+        newsettings = oldsettings;
+
+
+//        newsettings.c_cflag &= ~PARENB; // Clear parity bit, disabling parity (most common)
+//        newsettings.c_cflag &= ~CSTOPB; // Clear stop field, only one stop bit used in communication (most common)
+//        newsettings.c_cflag &= ~CSIZE; // Clear all bits that set the data size
+//        newsettings.c_cflag |= CS8; // 8 bits per byte (most common)
+//        newsettings.c_cflag &= ~CRTSCTS; // Disable RTS/CTS hardware flow control (most common)
+//        newsettings.c_cflag |= CREAD | CLOCAL; // Turn on READ & ignore ctrl lines (CLOCAL = 1)
+//
+//        newsettings.c_lflag &= ~ICANON;
+//        newsettings.c_lflag &= ~ECHO; // Disable echo
+//        newsettings.c_lflag &= ~ECHOE; // Disable erasure
+//        newsettings.c_lflag &= ~ECHONL; // Disable new-line echo
+//        newsettings.c_lflag &= ~ISIG; // Disable interpretation of INTR, QUIT and SUSP
+//        newsettings.c_iflag &= ~(IXON | IXOFF | IXANY); // Turn off s/w flow ctrl
+//        newsettings.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL); // Disable any special handling of received bytes
+//
+//        newsettings.c_oflag &= ~OPOST; // Prevent special interpretation of output bytes (e.g. newline chars)
+//        newsettings.c_oflag &= ~ONLCR; // Prevent conversion of newline to carriage return/line feed
+        // tty.c_oflag &= ~OXTABS; // Prevent conversion of tabs to spaces (NOT PRESENT ON LINUX)
+        // tty.c_oflag &= ~ONOEOT; // Prevent removal of C-d chars (0x004) in output (NOT PRESENT ON LINUX)
+
+        newsettings.c_cc[VTIME] = 10;    // Wait for up to 1s (10 deciseconds), returning as soon as any data is received.
+        newsettings.c_cc[VMIN] = 0;
+
+        // Set in/out baud rate to be 9600
+        cfsetispeed(&newsettings, B115200);
+        cfsetospeed(&newsettings, B115200);
+
+        if (tcsetattr(port, TCSANOW, &newsettings) != 0) {
+            throw std::logic_error("from tcgetattr");
+        }
+        tcflush(port, TCIFLUSH);
+
         if (port <= 0) {
             throw std::logic_error("Port opening failed");
         } else {

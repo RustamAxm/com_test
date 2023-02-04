@@ -9,9 +9,14 @@ void Query(auto &ser, std::string & query_) {
     std::cout << returned;
 }
 
-int main() {
+struct data_ {
+    uint16_t A0;
+    uint16_t A1;
+    uint16_t A2;
+};
 
-    std::string com = "/dev/ttyUSB0";
+void test_bin() {
+    std::string com = "/dev/ttyUSB1";
     Serial::Serial ser(com);
     sleep(3);
 //
@@ -23,16 +28,28 @@ int main() {
 //
     std::string bin = "start";
     ser.Write(bin);
-    sleep(1);
+    std::cout << bin << std::endl;
+
     for (int i =0; i< 1000; ++i) {
-        auto data= ser.ReadBin(3);
+        auto data= ser.ReadBin(6);
 
         for (auto it : data) {
             std::cout << it << " ";
         }
         std::cout << std::endl;
     }
+}
+int main() {
+    std::string com = "/dev/ttyUSB0";
+    Serial::Serial ser(com);
+    sleep(2);
 
+    std::string start = "start";
+    ser << start;
+    sleep(1);
+    std::string buffer;
+    buffer = ser.Read();
+    std::cout << buffer << std::endl;
     return 0;
 
 }

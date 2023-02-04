@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/select.h>
+#include <termios.h>
 #include <string>
 #include <stdexcept>
 #include <vector>
