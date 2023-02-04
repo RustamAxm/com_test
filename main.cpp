@@ -16,22 +16,16 @@ struct data_ {
 };
 
 void test_bin() {
-    std::string com = "/dev/ttyUSB1";
+    std::string com = "/dev/ttyUSB0";
     Serial::Serial ser(com);
-    sleep(3);
-//
-//    std::string s = "fill";
-//    Query(ser, s);
-//
-//    std::string message = "send";
-//    Query(ser, message);
-//
+    sleep(2);
+
     std::string bin = "start";
     ser.Write(bin);
     std::cout << bin << std::endl;
 
-    for (int i =0; i< 1000; ++i) {
-        auto data= ser.ReadBin(6);
+    for (int i =0; i< 6; ++i) {
+        auto data= ser.ReadBin(1000);
 
         for (auto it : data) {
             std::cout << it << " ";
@@ -39,17 +33,21 @@ void test_bin() {
         std::cout << std::endl;
     }
 }
-int main() {
+
+void test_str() {
     std::string com = "/dev/ttyUSB0";
     Serial::Serial ser(com);
     sleep(2);
 
     std::string start = "start";
     ser << start;
-    sleep(1);
     std::string buffer;
     buffer = ser.Read();
     std::cout << buffer << std::endl;
+}
+
+int main() {
+    test_bin();
     return 0;
 
 }
