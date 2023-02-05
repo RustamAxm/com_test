@@ -36,7 +36,7 @@ int test_com_fft() {
 
     TSQueue<std::vector<uint16_t>> queue_;
     std::vector<std::vector<double>> fft_data;
-    size_t counts_len = 2048;
+    size_t counts_len = 4096;
     int struct_len = 6;
 
     for (int i = 0; i < struct_len; ++i) {
@@ -52,7 +52,7 @@ int test_com_fft() {
         std::cout << "start arduino thread" << std::endl;
         using Clock = std::chrono::steady_clock;
         while (runing) {
-            std::string bin = "start";
+            std::string bin = std::to_string(counts_len);
             ser.Write(bin);
             const Clock::time_point start_time_ = Clock::now();
             for (int i = 0; i < counts_len; ++i) {
@@ -61,7 +61,7 @@ int test_com_fft() {
             }
             const auto end_time = Clock::now();
             const auto dur = end_time - start_time_;
-            period = duration_cast<std::chrono::milliseconds>(dur).count()/counts_len;
+            period = duration_cast<std::chrono::microseconds>(dur).count()/counts_len;
         }
     });
 
@@ -104,7 +104,7 @@ int test_com_fft() {
             runing = false;
             t1.join();
             t2.join();
-            std::cout << "freq = " <<  1.0/(static_cast<double>(period)) << " kHz" << std::endl;
+            std::cout << "freq = " <<  1.0/(static_cast<double>(period)) << " MHz" << std::endl;
             print_fft_data( std::cout, fft_data);
             save_to_txt_data("data.txt", fft_data);
             return 0;
