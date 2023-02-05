@@ -5,7 +5,6 @@
 
 #include <complex>
 #include <valarray>
-#include <execution>
 #include <cmath>
 
 
