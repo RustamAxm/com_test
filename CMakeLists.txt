@@ -12,6 +12,6 @@ add_executable(com_test
         modules/FFT_class.h
         modules/FFT_class.cpp
         tests/test_com.h
-        tests/test_com_plus_fft.h)
+        tests/test_com_plus_fft.h modules/Serial_impl.cpp)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE tbb)

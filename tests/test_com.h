@@ -24,7 +24,7 @@ void test_bin() {
 
     TSQueue<std::vector<uint16_t>> queue_;
     std::string com = "/dev/ttyUSB0";
-    Serial::Serial ser(com);
+    Serial::Serial ser(com, B115200);
     sleep(2);
 
     std::string bin = "start";
@@ -45,7 +45,7 @@ void test_bin() {
 
 void test_str() {
     std::string com = "/dev/ttyUSB0";
-    Serial::Serial ser(com);
+    Serial::Serial ser(com, B115200);
     sleep(2);
 
     std::string start = "start";

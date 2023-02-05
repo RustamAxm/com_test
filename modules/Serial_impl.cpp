@@ -6,7 +6,10 @@
 
 namespace Serial {
 
-    Serial::Serial(const std::string &com) {
+    Serial::Serial(const std::string &com) : Serial(com, B115200) {
+    }
+
+    Serial::Serial(const std::string &com, speed_t speed) {
 
         port = open(const_cast<const char *>(com.c_str()), O_RDWR);
 
@@ -37,12 +40,12 @@ namespace Serial {
 //         tty.c_oflag &= ~OXTABS; // Prevent conversion of tabs to spaces (NOT PRESENT ON LINUX)
 //         tty.c_oflag &= ~ONOEOT; // Prevent removal of C-d chars (0x004) in output (NOT PRESENT ON LINUX)
 
-        newsettings.c_cc[VTIME] = 5;    // Wait for up to 1s (10 deciseconds), returning as soon as any data is received.
+        newsettings.c_cc[VTIME] = 1;    // Wait for up to 1s (10 deciseconds), returning as soon as any data is received.
         newsettings.c_cc[VMIN] = 0;
 
         // Set in/out baud rate to be 9600
-        cfsetispeed(&newsettings, B115200);
-        cfsetospeed(&newsettings, B115200);
+        cfsetispeed(&newsettings, speed);
+        cfsetospeed(&newsettings, speed);
 
         if (tcsetattr(port, TCSANOW, &newsettings) != 0) {
             throw std::logic_error("from tcgetattr");

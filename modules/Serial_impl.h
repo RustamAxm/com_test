@@ -18,6 +18,7 @@ namespace Serial {
         Serial(Serial && other) = delete;
         Serial operator =(Serial && other) = delete;
 
+        explicit Serial(const std::string &com, speed_t speed);
         explicit Serial(const std::string &com);
 
         ~Serial();

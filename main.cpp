@@ -5,7 +5,5 @@
 
 int main() {
     test_com_fft();
-//test_bin();
-
     return 0;
 }
