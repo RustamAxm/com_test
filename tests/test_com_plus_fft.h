@@ -36,7 +36,7 @@ int test_com_fft() {
 
     TSQueue<std::vector<uint16_t>> queue_;
     std::vector<std::vector<double>> fft_data;
-    size_t counts_len = 4096;
+    size_t counts_len = 512;
     int struct_len = 6;
 
     for (int i = 0; i < struct_len; ++i) {
@@ -45,7 +45,7 @@ int test_com_fft() {
     }
 
     std::string com = "/dev/ttyUSB0";
-    Serial::Serial ser(com, B1000000);
+    Serial::Serial ser(com, B9600);
     sleep(2);
 
     std::thread t1([&]() {
@@ -106,7 +106,7 @@ int test_com_fft() {
             t2.join();
             std::cout << "freq = " <<  1.0/(static_cast<double>(period)) << " MHz" << std::endl;
             print_fft_data( std::cout, fft_data);
-            save_to_txt_data("data.txt", fft_data);
+//            save_to_txt_data("data.txt", fft_data);
             return 0;
         }
     }
